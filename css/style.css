@@ -1,0 +1,15 @@
+.fl{float: left;}
+.fr{float: right;}
+.clearfix:after{content: '';display: block;visibility: hidden;clear: both;}
+.clearfix{*zoom:1;}
+.canlender-wrapper{width: 700px;}
+.timenow{width: 25%;}
+.canlender-day,.canlender-month,.canlender-year{padding-right: 10px;}
+.back-to-today{margin-left: 12px;padding: 0 6px;border-radius: 6px;background: #d3d3d3;cursor: pointer;}
+.canlender-body{margin-top: 16px;}
+.canlender-week{height: 50px;}
+.canlender-week .item,.canlender-days .item{float: left;width: -moz-calc( 100% / 7 );width: -webkit-calc( 100% / 7 );width: calc( 100% / 7 );height: 50px;line-height: 50px;text-align: center;border: solid 1px #eee;-moz-box-sizing: -webkit-border-box;box-sizing: border-box;cursor: default;}
+.canlender-week .item.selected,.canlender-days .item.selected{border-color: #ff3636;}
+.canlender-days .item:empty{background: #f5f5f5;}
+.canlender-body-left{width: 80%;}
+.canlender-body-right{width: 20%;height: 350px;background: #f5f5dc;}
