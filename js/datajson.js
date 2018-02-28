@@ -1,6 +1,6 @@
 var data = {
 	attrs: {
-		class: 'item'
+		class: 'item enabled'
 	},
 	year: [
 		{value: 1900, text: '1900年' },

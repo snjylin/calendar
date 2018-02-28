@@ -11,10 +11,10 @@
 .canlender-left-body{margin-top: 10px;padding: 0 10px 10px 10px;}
 .canlender-week{height: 50px;}
 .canlender-week .item,.canlender-days .item{float: left;width: -moz-calc( 100% / 7 );width: -webkit-calc( 100% / 7 );width: calc( 100% / 7 );height: 50px;text-align: center;border: solid 2px transparent;cursor: default;-moz-box-sizing: -webkit-border-box;box-sizing: border-box;}
-.canlender-days .item:not(:empty){border-color: #fff; background: #f8f8f8;}
-.canlender-week .item.selected,.canlender-days .item:not(:empty).selected,.canlender-days .item:not(:empty):hover{border: solid 2px #fb0;}
+.canlender-days .item.enabled{border-color: #fff; background: #f8f8f8;}
+.canlender-week .item.selected,.canlender-days .item.enabled.selected,.canlender-days .item.enabled:hover{border: solid 2px #fb0;}
 .canlender-days .item{font-size: 20px;color: #333;}
-.canlender-days .item .solar-term{font-size: 12px;line-height: 12px;margin-top: 3px;}
+.canlender-days .item .solar-term{font-size: 12px;line-height: 12px;}
 .canlender-right-date{margin-top: 10px;}
 .canlender-right-day{display: inline-block;width: 80px;height: 80px;margin-top: 15px;line-height: 80px;border-radius: 6px;background: #fb0;font-size: 48px;}
 .canlender-right-lunar{margin-top: 10px;}

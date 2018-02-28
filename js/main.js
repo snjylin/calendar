@@ -82,11 +82,10 @@ $(function(){
 				break;
 		}
 		// return year + '/' + add0(month) + '/' + add0(day) + ' ' + add0(hours) + ':' + add0(minutes) + ':' + add0(seconds);
-		// return [year,add0(month),add0(day)].join('/') + ' ' + [add0(hours),add0(minutes),add0(seconds)].join(':');
 		return [year,add0(month),add0(day)].join('/') + ' 星期' + week;
 	}
 	
-	// 当前时间
+	// // 当前时间
 	// setInterval(function(){
 	// 	var date = new Date();
 	// 	$('.timenow').html([add0(date.getHours()),add0(date.getMinutes()),add0(date.getSeconds())].join(':'));
@@ -101,6 +100,7 @@ $(function(){
 		$('.canlender-right-day').html(new Date(timestamp).getDate());
 	}
 
+	// 给当前选中元素添加selected类或selected属性
 	function selectItem(selector, data){
 		$(selector).each(function(){
 			var $this = $(this);
@@ -114,13 +114,14 @@ $(function(){
 			}
 		});
 	}
+	// 选中当前选中日期对应的星期
 	function selectWeek(year,month,day){
 		var date = window.ZTools.setDateTime( year, month, day );
 		var weekday = date.getDay();
 		weekday = weekday ? weekday : 7;
 		$('.canlender-week .item').eq(weekday - 1).addClass('selected').siblings().removeClass('selected');
 	}
-	// 当月1号不为周一时补全从周一开始的部分
+	// 当月1号不为周一时补全从周一开始的部分，当月最后一天不为周日补全到周日结束的部分，用于占位
 	function calcCompleteWeek(year,month,day){
 		$('.canlender-days').find('.disabled').remove();
 		var date = window.ZTools.setDateTime( year, month, 1 );
@@ -141,25 +142,15 @@ $(function(){
 			}
 			$('.canlender-days').append(htmlbackward);
 		}
-		if(len / 7 > 5){
+		// 根据行数确定单元格高度(亦即行高)
+		if(len / 7 == 4){
+			$('.canlender-days .item').css({'height':'75px'});
+		}else if(len / 7 > 5){
 			$('.canlender-days .item').css({'height':'50px'});
 		}else{
 			$('.canlender-days .item').css({'height':'60px'});
 		}
-
 	}
-	function today(){
-		var date = new Date();
-		var year = date.getFullYear();
-		var month = date.getMonth() + 1;
-		var day = date.getDate();
-		judgeMonthAndSetDayItem(year, month, day);
-	}
-	today();
-	$('.back-to-today').click(function(){
-		today();
-	});
-
 	// 添加节气到对应的日期
 	function addSolarTerm(year,month,daysNum){
 		// 传进来的年月可能是字符串，需要转成数字
@@ -168,7 +159,7 @@ $(function(){
 		daysNum = parseInt(daysNum);
 		for(i = 1; i <= daysNum; i++){
 			var solarTerm = window.ZTools.getSolarTerms(year, month, i);
-			var dayItem = $('.canlender-days .item:not(:empty)').eq(i - 1);
+			var dayItem = $('.canlender-days .item.enabled').eq(i - 1);
 			var dayValue = dayItem.data('value');
 			if(solarTerm && dayValue == i){
 				var dayValue = dayItem.data('value');
@@ -176,7 +167,7 @@ $(function(){
 			}
 		}
 	}
-	// 判断月份确定该月天数并设置内容
+	// 通过月份判断该月天数并设置内容
 	function judgeMonthAndSetDayItem(year, month, day){
 		// 传进来的年月日可能是字符串，需要转成数字
 		year = parseInt(year);
@@ -184,6 +175,7 @@ $(function(){
 		day = parseInt(day);
 		var data_days_copy = null;
 		var daysNum;
+		// 判断该月天数
 		if( month == 2 ){
 			//判断闰年
 			if((year % 400 == 0) || (year % 4 == 0) && (year % 100 != 0)){
@@ -203,6 +195,7 @@ $(function(){
 		var dayItem = setHtml('div',data_attrs,data_days_copy);
 		$('.canlender-days').html(dayItem);
 
+		// 需要先setHtml设置完内容再做其他操作
 		addSolarTerm(year, month, daysNum);
 
 		selectItem('.canlender-year option', year);
@@ -216,8 +209,9 @@ $(function(){
 		$('.lunar-year').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesYear(year));
 		$('.lunar-md').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesMonthAndDay(year));
 	}
-	function eventFilter(selector, event, value, object){
-		$(selector).on(event,object,function(){
+	// 事件选择器
+	function eventFilter(selector, event, value, childrenSelector){
+		$(selector).on(event,childrenSelector,function(){
 			var year = (value == 'year') ? $(this).val() : $('.canlender-year select').val();
 			var month = (value == 'month') ? $(this).val() : $('.canlender-month select').val();
 			var day = (value == 'day') ? ($(this).val() || $(this).data('value')) : $('.canlender-day select').val();
@@ -227,6 +221,20 @@ $(function(){
 	eventFilter('.canlender-year select','change', 'year');
 	eventFilter('.canlender-month select','change', 'month');
 	eventFilter('.canlender-day select','change', 'day');
-	// 因为绑定的对象改变了，所以选择器不能直接写成'.canlender-days .item',需要写成'.canlender-days',重新绑定'.item'
-	eventFilter('.canlender-days','click', 'day', '.item:not(:empty)');
+	// 因为绑定的对象改变了,所以选择器不能直接写成'.canlender-days .item',
+	// 需要写成'.canlender-days',重新绑定'.item.enabled'
+	eventFilter('.canlender-days','click', 'day', '.item.enabled');
+
+	// 第一次加载时需要根据当前日期设置
+	function today(){
+		var date = new Date();
+		var year = date.getFullYear();
+		var month = date.getMonth() + 1;
+		var day = date.getDate();
+		judgeMonthAndSetDayItem(year, month, day);
+	}
+	today();
+	$('.back-to-today').click(function(){
+		today();
+	});
 }(data));
