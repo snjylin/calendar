@@ -54,36 +54,52 @@ $(function(){
 		var year = date.getFullYear();
 		var month = date.getMonth() + 1;
 		var day = date.getDate();
-		var hours = date.getHours();
-		var minutes = date.getMinutes();
-		var seconds = date.getSeconds();
-		// return year + '/' + add0(month) + '/' + add0(day) + ' ' + add0(hours) + ':' + add0(minutes) + ':' + add0(seconds);
-		return [year,add0(month),add0(day)].join('/') + ' ' + [add0(hours),add0(minutes),add0(seconds)].join(':');
-	}
-
-	// 设置日期时间返回时间
-	function setTime($year, $month, $day){
-		var date = new Date();
-		if( !$year && !$month && !$day ){
-			return date;
-		}else{
-			$year = parseInt($year) || date.getFullYear();
-			$month = (parseInt($month) - 1) || date.getMonth();
-			$day = parseInt($day) || date.getDate();
+		// var hours = date.getHours();
+		// var minutes = date.getMinutes();
+		// var seconds = date.getSeconds();
+		var week = date.getDay();
+		switch(week){
+			case 1: 
+				week = '一';
+				break;
+			case 2: 
+				week = '二';
+				break;
+			case 3: 
+				week = '三';
+				break;
+			case 4: 
+				week = '四';
+				break;
+			case 5: 
+				week = '五';
+				break;
+			case 6: 
+				week = '六';
+				break;
+			case 0: 
+				week = '日';
+				break;
 		}
-		timestamp = date.setFullYear($year);
-		date = new Date(timestamp);
-		timestamp = date.setMonth($month);
-		date = new Date(timestamp);
-		timestamp = date.setDate($day);
-		date = new Date(timestamp);
-		return date;
+		// return year + '/' + add0(month) + '/' + add0(day) + ' ' + add0(hours) + ':' + add0(minutes) + ':' + add0(seconds);
+		// return [year,add0(month),add0(day)].join('/') + ' ' + [add0(hours),add0(minutes),add0(seconds)].join(':');
+		return [year,add0(month),add0(day)].join('/') + ' 星期' + week;
 	}
+	
+	// 当前时间
+	// setInterval(function(){
+	// 	var date = new Date();
+	// 	$('.timenow').html([add0(date.getHours()),add0(date.getMinutes()),add0(date.getSeconds())].join(':'));
+	// });
 
-	setInterval(function(){
-		var timestamp = new Date().getTime();
-		$('.timenow').html( timeFormat(timestamp) );
-	});
+	function displayDate(){
+		var year = $('.canlender-year select').val();
+		var month = $('.canlender-month select').val();
+		var day = $('.canlender-day select').val();
+		var timestamp = window.ZTools.setDateTime(year, month, day) || new Date().getTime();
+		$('.canlender-right-date').html( timeFormat(timestamp) );
+		$('.canlender-right-day').html(new Date(timestamp).getDate());
+	}
 
 	function selectItem(selector, data){
 		$(selector).each(function(){
@@ -98,16 +114,16 @@ $(function(){
 			}
 		});
 	}
-	function selectWeek($year,$month,$day){
-		var date = setTime( $year, $month, $day );
+	function selectWeek(year,month,day){
+		var date = window.ZTools.setDateTime( year, month, day );
 		var weekday = date.getDay();
 		weekday = weekday ? weekday : 7;
 		$('.canlender-week .item').eq(weekday - 1).addClass('selected').siblings().removeClass('selected');
 	}
 	// 当月1号不为周一时补全从周一开始的部分
-	function calcCompleteWeek($year,$month,$day){
+	function calcCompleteWeek(year,month,day){
 		$('.canlender-days').find('.disabled').remove();
-		var date = setTime( $year, $month, 1 );
+		var date = window.ZTools.setDateTime( year, month, 1 );
 		var week = new Date(date).getDay();
 		week = week ? week : 7;
 		var html = '<div class="item disabled"></div>';
@@ -125,76 +141,110 @@ $(function(){
 			}
 			$('.canlender-days').append(htmlbackward);
 		}
-		if(len / 7 < 5){
-			$('.canlender-days .item').css({'height':'60px'});
-		}else{
+		if(len / 7 > 5){
 			$('.canlender-days .item').css({'height':'50px'});
+		}else{
+			$('.canlender-days .item').css({'height':'60px'});
 		}
 
 	}
 	function today(){
 		var date = new Date();
-		var $year = date.getFullYear();
-		var $month = date.getMonth() + 1;
-		var $day = date.getDate();
-		judgeMonthAndSetDayItem($year, $month, $day);
+		var year = date.getFullYear();
+		var month = date.getMonth() + 1;
+		var day = date.getDate();
+		judgeMonthAndSetDayItem(year, month, day);
 	}
 	today();
 	$('.back-to-today').click(function(){
 		today();
 	});
-	// 判断月份确定该月天数并设置内容
-	function judgeMonthAndSetDayItem($year, $month, $day){
-		var data_days_copy = null;
-		if( $month == 2 ){
-			if(($year % 400 == 0) || ($year % 4 == 0) && ($year % 100 != 0)){
-				data_days_copy = data_days.slice(0, 29);
-			}else{
-				data_days_copy = data_days.slice(0, 28);
+
+	// 添加节气到对应的日期
+	function addSolarTerm(year,month,daysNum){
+		// 传进来的年月可能是字符串，需要转成数字
+		year = parseInt(year);
+		month = parseInt(month);
+		daysNum = parseInt(daysNum);
+		for(i = 1; i <= daysNum; i++){
+			var solarTerm = window.ZTools.getSolarTerms(year, month, i);
+			var dayItem = $('.canlender-days .item:not(:empty)').eq(i - 1);
+			var dayValue = dayItem.data('value');
+			if(solarTerm && dayValue == i){
+				var dayValue = dayItem.data('value');
+				dayItem.append('<p class="solar-term">' + solarTerm + '</p>');
 			}
-		}else if( $month == 1 || $month == 3 || $month == 5 || $month == 7 || $month == 8 || $month == 10 || $month == 12 ){
-			data_days_copy = data_days.concat();
-		}else{
+		}
+	}
+	// 判断月份确定该月天数并设置内容
+	function judgeMonthAndSetDayItem(year, month, day){
+		// 传进来的年月日可能是字符串，需要转成数字
+		year = parseInt(year);
+		month = parseInt(month);
+		day = parseInt(day);
+		var data_days_copy = null;
+		var daysNum;
+		if( month == 2 ){
+			//判断闰年
+			if((year % 400 == 0) || (year % 4 == 0) && (year % 100 != 0)){
+				data_days_copy = data_days.slice(0, 29);	// 闰年
+				daysNum = 29;
+			}else{
+				data_days_copy = data_days.slice(0, 28);	// 平年
+				daysNum = 28;
+			}
+		}else if( month == 4 || month == 6 || month == 9 || month == 11 ){
 			data_days_copy = data_days.slice(0, 30);
+			daysNum = 30;
+		}else{
+			data_days_copy = data_days.concat();
+			daysNum = 31;
 		}
 		var dayItem = setHtml('div',data_attrs,data_days_copy);
 		$('.canlender-days').html(dayItem);
 
-		selectItem('.canlender-year option', $year);
-		selectItem('.canlender-month option', $month);
-		selectItem('.canlender-day option', $day);
-		selectItem('.canlender-days .item', $day);
-		selectWeek($year, $month, $day);
-		calcCompleteWeek($year, $month, $day);
+		addSolarTerm(year, month, daysNum);
+
+		selectItem('.canlender-year option', year);
+		selectItem('.canlender-month option', month);
+		selectItem('.canlender-day option', day);
+		selectItem('.canlender-days .item', day);
+		// selectWeek(year, month, day);
+		calcCompleteWeek(year, month, day);
+		displayDate();
+		// $('.lunar-date').html();
+		$('.lunar-year').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesYear(year));
+		$('.lunar-md').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesMonthAndDay(year));
 	}
 	$('.canlender-year select').on('change',function(){
 		var $value = $(this).val();
-		var $month = $('.canlender-month select').val();
-		var $day = $('.canlender-day select').val();
+		var month = $('.canlender-month select').val();
+		var day = $('.canlender-day select').val();
 
-		judgeMonthAndSetDayItem($value, $month, $day);
+		judgeMonthAndSetDayItem($value, month, day);
 	});
 	$('.canlender-month select').on('change',function(){
 		var $value = $(this).val();
-		var $year = $('.canlender-year select').val();
-		var $day = $('.canlender-day select').val();
+		var year = $('.canlender-year select').val();
+		var day = $('.canlender-day select').val();
 
-		judgeMonthAndSetDayItem($year, $value, $day);
+		judgeMonthAndSetDayItem(year, $value, day);
 	});
 	$('.canlender-day select').on('change',function(){
 		var $value = $(this).val();
-		var $month = $('.canlender-month select').val();
-		var $year = $('.canlender-year select').val();
+		var month = $('.canlender-month select').val();
+		var year = $('.canlender-year select').val();
 
-		judgeMonthAndSetDayItem($year, $month, $value);
+		judgeMonthAndSetDayItem(year, month, $value);
 	});
-	// $('.canlender-days .item').on('click',function(){ 
+	// $('.canlender-days .item').on('click',function(){
 	// 这样写会有问题，只能点击一次，再次点击就没有反应了，因为绑定的对象改变了，可以改成下面这种
 	$('.canlender-days').on('click','.item',function(){
 		var $value = $(this).data('value');
-		var $month = $('.canlender-month select').val();
-		var $year = $('.canlender-year select').val();
+		var month = $('.canlender-month select').val();
+		var year = $('.canlender-year select').val();
 
-		judgeMonthAndSetDayItem($year, $month, $value);
+		judgeMonthAndSetDayItem(year, month, $value);
 	});
+
 }(data));
