@@ -216,35 +216,17 @@ $(function(){
 		$('.lunar-year').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesYear(year));
 		$('.lunar-md').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesMonthAndDay(year));
 	}
-	$('.canlender-year select').on('change',function(){
-		var $value = $(this).val();
-		var month = $('.canlender-month select').val();
-		var day = $('.canlender-day select').val();
-
-		judgeMonthAndSetDayItem($value, month, day);
-	});
-	$('.canlender-month select').on('change',function(){
-		var $value = $(this).val();
-		var year = $('.canlender-year select').val();
-		var day = $('.canlender-day select').val();
-
-		judgeMonthAndSetDayItem(year, $value, day);
-	});
-	$('.canlender-day select').on('change',function(){
-		var $value = $(this).val();
-		var month = $('.canlender-month select').val();
-		var year = $('.canlender-year select').val();
-
-		judgeMonthAndSetDayItem(year, month, $value);
-	});
-	// $('.canlender-days .item').on('click',function(){
-	// 这样写会有问题，只能点击一次，再次点击就没有反应了，因为绑定的对象改变了，可以改成下面这种
-	$('.canlender-days').on('click','.item',function(){
-		var $value = $(this).data('value');
-		var month = $('.canlender-month select').val();
-		var year = $('.canlender-year select').val();
-
-		judgeMonthAndSetDayItem(year, month, $value);
-	});
-
+	function eventFilter(selector, event, value, object){
+		$(selector).on(event,object,function(){
+			var year = (value == 'year') ? $(this).val() : $('.canlender-year select').val();
+			var month = (value == 'month') ? $(this).val() : $('.canlender-month select').val();
+			var day = (value == 'day') ? ($(this).val() || $(this).data('value')) : $('.canlender-day select').val();
+			judgeMonthAndSetDayItem(year, month, day);
+		});
+	}
+	eventFilter('.canlender-year select','change', 'year');
+	eventFilter('.canlender-month select','change', 'month');
+	eventFilter('.canlender-day select','change', 'day');
+	// 因为绑定的对象改变了，所以选择器不能直接写成'.canlender-days .item',需要写成'.canlender-days',重新绑定'.item'
+	eventFilter('.canlender-days','click', 'day', '.item:not(:empty)');
 }(data));
