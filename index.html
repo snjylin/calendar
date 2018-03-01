@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>canlender</title>
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div id="doc">
+		<div id="canlender" class="canlender-wrapper clearfix">
+			<div class="canlender-left fl">
+				<div class="canlender-left-header clearfix">
+					<div class="canlender-year fl"><select></select></div>
+					<div class="canlender-month fl"><select></select></div>
+					<div class="canlender-day fl"><select></select></div>
+					<div class="back-to-today fr">回到今天</div>
+					<!-- <div class="timenow fr"></div> -->
+				</div>
+				<div class="canlender-left-body clearfix">
+					<div class="canlender-week clearfix"></div>
+					<div class="canlender-days clearfix"></div>
+				</div>
+			</div>
+			<div class="canlender-right fl">
+				<p class="canlender-right-date"></p>
+				<p class="canlender-right-day"></p>
+				<p class="canlender-right-lunar canlender-small">
+					<span class="today-lunar-date">正月二十</span>
+					<span class="today-lunar-year">丙申年 【猴年】</span>
+					<span class="today-lunar-md">庚寅月 己卯日</span>
+				</p>
+			</div>
+		</div>
+	</div>
+	<script src="js/lib/jquery-1.8.3.min.js"></script>
+	<script src="js/datajson.js"></script>
+	<script src="js/tools.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
