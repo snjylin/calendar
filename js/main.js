@@ -6,7 +6,7 @@ $(function(){
 		data_week = data.week,
 		data_days = data.days;
 
-	function setHtml(tplTag,tplAttrs,tplOpts){
+	function setHtml(tplTag, tplAttrs, tplOpts){
 		if( !tplOpts ){ return; }
 		var tpl = '';
 		var tplTag;
@@ -115,14 +115,14 @@ $(function(){
 		});
 	}
 	// 选中当前选中日期对应的星期
-	function selectWeek(year,month,day){
+	function selectWeek(year, month, day){
 		var date = window.ZTools.setDateTime( year, month, day );
 		var weekday = date.getDay();
 		weekday = weekday ? weekday : 7;
 		$('.canlender-week .item').eq(weekday - 1).addClass('selected').siblings().removeClass('selected');
 	}
 	// 当月1号不为周一时补全从周一开始的部分，当月最后一天不为周日补全到周日结束的部分，用于占位
-	function calcCompleteWeek(year,month,day){
+	function calcCompleteWeek(year, month, day){
 		$('.canlender-days').find('.disabled').remove();
 		var date = window.ZTools.setDateTime( year, month, 1 );
 		var week = new Date(date).getDay();
@@ -221,12 +221,12 @@ $(function(){
 			judgeMonthAndSetDayItem(year, month, day);
 		});
 	}
-	eventFilter('.canlender-year select','change', 'year');
-	eventFilter('.canlender-month select','change', 'month');
-	eventFilter('.canlender-day select','change', 'day');
+	eventFilter('.canlender-year select','change','year');
+	eventFilter('.canlender-month select','change','month');
+	eventFilter('.canlender-day select','change','day');
 	// 因为绑定的对象改变了,所以选择器不能直接写成'.canlender-days .item',
 	// 需要写成'.canlender-days',重新绑定'.item.enabled'
-	eventFilter('.canlender-days','click', 'day', '.item.enabled');
+	eventFilter('.canlender-days','click','day','.item.enabled');
 
 	// 第一次加载时需要根据当前日期设置
 	function today(){
