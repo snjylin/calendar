@@ -151,19 +151,22 @@ $(function(){
 			$('.canlender-days .item').css({'height':'60px'});
 		}
 	}
-	// 添加节气到对应的日期
-	function addSolarTerm(year,month,daysNum){
+	// 添加节气和农历到对应的日期
+	function addSolarTermAndLunarDate(year, month, daysNum){
 		// 传进来的年月可能是字符串，需要转成数字
 		year = parseInt(year);
 		month = parseInt(month);
 		daysNum = parseInt(daysNum);
 		for(i = 1; i <= daysNum; i++){
 			var solarTerm = window.ZTools.getSolarTerms(year, month, i);
+			var lunarDay = window.ZTools.getLunarDate(year, month, i).slice(2);
 			var dayItem = $('.canlender-days .item.enabled').eq(i - 1);
 			var dayValue = dayItem.data('value');
+
 			if(solarTerm && dayValue == i){
-				var dayValue = dayItem.data('value');
-				dayItem.append('<p class="solar-term">' + solarTerm + '</p>');
+				dayItem.append('<p class="item-solar-term">' + solarTerm + '</p>');
+			}else if(dayValue == i){
+				dayItem.append('<p class="item-lunar-date">' + lunarDay + '</p>');
 			}
 		}
 	}
@@ -196,7 +199,7 @@ $(function(){
 		$('.canlender-days').html(dayItem);
 
 		// 需要先setHtml设置完内容再做其他操作
-		addSolarTerm(year, month, daysNum);
+		addSolarTermAndLunarDate(year, month, daysNum);
 
 		selectItem('.canlender-year option', year);
 		selectItem('.canlender-month option', month);
@@ -205,9 +208,9 @@ $(function(){
 		// selectWeek(year, month, day);
 		calcCompleteWeek(year, month, day);
 		displayDate();
-		// $('.lunar-date').html();
-		$('.lunar-year').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesYear(year));
-		$('.lunar-md').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesMonthAndDay(year));
+		$('.today-lunar-date').html(window.ZTools.getLunarDate(year, month, day));
+		$('.today-lunar-year').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesYear(year));
+		$('.today-lunar-md').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesMonthAndDay(year));
 	}
 	// 事件选择器
 	function eventFilter(selector, event, value, childrenSelector){

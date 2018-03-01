@@ -22,6 +22,16 @@
 		return date;
 	}
 
+	// 判断闰年
+	function judgeLeapYear(year){
+		year = parseInt(year);
+		if((year % 400 == 0) || (year % 4 == 0) && (year % 100 != 0)){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
 	// 计算节气
 	function getSolarTerms(year, month, day){
 		// 传进来的年月日可能是字符串，需要转成数字
@@ -32,9 +42,11 @@
 		var D = 0.2422;
 		var C;
 		var L = Math.ceil(Y / 4);
-
+		// 20世纪C值
 		var arrC20 = new Array();
+		// 21世纪C值
 		var arrC21 = new Array(5.4055,20.12,3.87,18.73,5.63,20.646,4.81,20.1,5.52,21.04,5.678,21.37,7.108,22.83,7.5,23.13,7.646,23.042,8.318,23.438,7.438,22.36,7.18,21.94);
+		// 22世纪C值
 		var arrC22 = new Array();
 		function getFormulaSolarTerm(arrC,month){
 			var solarTermArr = new Array('小寒','大寒','立春','雨水','惊蛰','春分','清明','谷雨','立夏','小满','芒种','夏至','小暑','大暑','立秋','处暑','白露','秋分','寒露','霜降','立冬','小雪','大雪','冬至');
@@ -97,6 +109,56 @@
 		}
 	}
 
+	// 计算农历日期
+	function getLunarDate(year, month, day){
+		// 传进来的年月日可能是字符串，需要转成数字
+		year = parseInt(year);
+		month = parseInt(month);
+		day = parseInt(day);
+		var lunarMonth,lunarDay;
+		$('.canlender-days .item.enabled').each(function(){
+			if(day !== $(this).data('value')){
+				return;
+			}
+			var lunarMonthArr = new Array('腊月','正月','二月','三月','四月','五月','六月','七月','八月','九月','十月','冬月');
+			var lunarDayArr = new Array('初一','初二','初三','初四','初五','初六','初七','初八','初九','初十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十');
+			var solarTermArr = new Array('小寒','大寒','立春','雨水','惊蛰','春分','清明','谷雨','立夏','小满','芒种','夏至','小暑','大暑','立秋','处暑','白露','秋分','寒露','霜降','立冬','小雪','大雪','冬至');
+			var solarTerm = $('.canlender-days .item.enabled').find('.solar-term').eq(0).text();
+			var len = solarTermArr.length;
+			// 公元年数－1977（或1901）＝4Q(商)＋R(余数)
+			var quotient = Math.floor((year - 1977)/4);
+			var remainder = (year - 1977 ) % 4;
+			var dayOrdinal;
+			var judgeLeapYear = window.ZTools.judgeLeapYear(year);
+			var monthDayNum1 = new Array(31,29,31,30,31,30,31,31,30,31,30,31);
+			var monthDayNum2 = new Array(31,28,31,30,31,30,31,31,30,31,30,31);
+			// 计算年内日期序数
+			if(month == 1){
+				dayOrdinal = 31  - (monthDayNum1[month - 1] - day);
+			}else if(month == 2 && judgeLeapYear){
+				dayOrdinal = 31 + 29  - (monthDayNum1[month - 1] - day);
+			}else if(month == 2 && !judgeLeapYear){
+				dayOrdinal = 31 + 28  - (monthDayNum2[month - 1] - day)
+			}else if(month < 8 && judgeLeapYear){
+				dayOrdinal = 30 * (month - 1) + Math.ceil(month / 2) + 29 - (monthDayNum1[month - 1] - day);
+			}else if(month < 8 && !judgeLeapYear){
+				dayOrdinal = 30 * (month - 1) + Math.ceil(month / 2) + 28 - (monthDayNum2[month - 1] - day);
+			}else if(judgeLeapYear){
+				dayOrdinal = 30 * (month - 1) + Math.floor(month / 2) + 29 - (monthDayNum1[month - 1] - day);
+			}else{
+				dayOrdinal = 30 * (month - 1) + Math.floor(month / 2) + 28 - (monthDayNum2[month - 1] - day);
+			}
+			// 阴历日期=14Q+10.6(R+1)+年内日期序数-29.5n（注:式中Q[quotient:商]、R[remainder:余数]、n均为自然数，R<4）
+			var F = (14 * quotient + 10.6 * (remainder + 1) + dayOrdinal);
+			var m = (F / 29.5 < 6) && (F / 29.5 + 12) || (F / 29.5);
+			var d;
+			(F % 29.5 < 1) ? ((d = F % 29.5 + 29.5),(m = m - 1)) : (d = F % 29.5);
+			lunarMonth = lunarMonthArr[Math.floor(m) - 6];
+			lunarDay = lunarDayArr[Math.floor(d) - 1];
+		});
+		return lunarMonth + lunarDay;
+	}
+
 	// 干支纪年
 	function HeavenlyStemsAndEarthlyBranchesYear(year){
 		// 传进来的年可能是字符串，需要转成数字
@@ -111,8 +173,9 @@
 		return heavenlyStems[num1] + earthlyBranches[num2] + '年 【' + chineseZodiac[num2] + '年】';
 	}
 	// 干支纪月 干支纪日
-	function HeavenlyStemsAndEarthlyBranchesMonthAndDay(month){
+	function HeavenlyStemsAndEarthlyBranchesMonthAndDay(month, day){
 		month = parseInt(month);
+		day = parseInt(day);
 		// 甲->己->庚->癸编号 4->10->0->3 取余对应的编号即为对应的天干
 		var heavenlyStems = new Array('甲','乙','丙','丁','戊','己','庚','辛','壬','癸');
 		// 子->未->申->亥编号 4->12->0->3 取余对应的编号即为对应的地支
@@ -124,7 +187,9 @@
 
 	var tools = {};
 	tools.setDateTime = setDateTime;
+	tools.judgeLeapYear = judgeLeapYear;
 	tools.getSolarTerms = getSolarTerms;
+	tools.getLunarDate = getLunarDate;
 	tools.HeavenlyStemsAndEarthlyBranchesYear = HeavenlyStemsAndEarthlyBranchesYear;
 	tools.HeavenlyStemsAndEarthlyBranchesMonthAndDay = HeavenlyStemsAndEarthlyBranchesMonthAndDay;
 	window.ZTools = tools;
