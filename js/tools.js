@@ -61,44 +61,20 @@
 				}
 				return solarTerm;
 			}
-			switch(month){
-				case 1:
-					return calculate(0) || calculate(1);
-					break;
-				case 2:
-					return calculate(2) || calculate(3);
-					break;
-				case 3:
-					return calculate(4) || calculate(5);
-					break;
-				case 4:
-					return calculate(6) || calculate(7);
-					break;
-				case 5:
-					return calculate(8) || calculate(9);
-					break;
-				case 6:
-					return calculate(10) || calculate(11);
-					break;
-				case 7:
-					return calculate(12) || calculate(13);
-					break;
-				case 8:
-					return calculate(14) || calculate(15);
-					break;
-				case 9:
-					return calculate(16) || calculate(17);
-					break;
-				case 10:
-					return calculate(18) || calculate(19);
-					break;
-				case 11:
-					return calculate(20) || calculate(21);
-					break;
-				case 12:
-					return calculate(22) || calculate(23);
-					break;
-			}
+			// 每月有两个节气？
+			var calcResult = (month == 1) && (calculate(0) || calculate(1))
+				|| (month == 2) && (calculate(2) || calculate(3))
+				|| (month == 3) && (calculate(4) || calculate(5))
+				|| (month == 4) && (calculate(6) || calculate(7))
+				|| (month == 5) && (calculate(8) || calculate(9))
+				|| (month == 6) && (calculate(10) || calculate(11))
+				|| (month == 7) && (calculate(12) || calculate(13))
+				|| (month == 8) && (calculate(14) || calculate(15))
+				|| (month == 9) && (calculate(16) || calculate(17))
+				|| (month == 10) && (calculate(18) || calculate(19))
+				|| (month == 11) && (calculate(20) || calculate(21))
+				|| (month == 12) && (calculate(22) || calculate(23));
+			return calcResult;
 		}
 		if(year > 1900 && year <= 2000){
 			return getFormulaSolarTerm(arrC20,month);
@@ -128,26 +104,17 @@
 			// 公元年数－1977（或1901）＝4Q(商)＋R(余数)
 			var quotient = Math.floor((year - 1977)/4);
 			var remainder = (year - 1977 ) % 4;
-			var dayOrdinal;
 			var judgeLeapYear = window.ZTools.judgeLeapYear(year);
 			var monthDayNum1 = new Array(31,29,31,30,31,30,31,31,30,31,30,31);
 			var monthDayNum2 = new Array(31,28,31,30,31,30,31,31,30,31,30,31);
 			// 计算年内日期序数
-			if(month == 1){
-				dayOrdinal = 31  - (monthDayNum1[month - 1] - day);
-			}else if(month == 2 && judgeLeapYear){
-				dayOrdinal = 31 + 29  - (monthDayNum1[month - 1] - day);
-			}else if(month == 2 && !judgeLeapYear){
-				dayOrdinal = 31 + 28  - (monthDayNum2[month - 1] - day)
-			}else if(month < 8 && judgeLeapYear){
-				dayOrdinal = 30 * (month - 1) + Math.ceil(month / 2) + 29 - (monthDayNum1[month - 1] - day);
-			}else if(month < 8 && !judgeLeapYear){
-				dayOrdinal = 30 * (month - 1) + Math.ceil(month / 2) + 28 - (monthDayNum2[month - 1] - day);
-			}else if(judgeLeapYear){
-				dayOrdinal = 30 * (month - 1) + Math.floor(month / 2) + 29 - (monthDayNum1[month - 1] - day);
-			}else{
-				dayOrdinal = 30 * (month - 1) + Math.floor(month / 2) + 28 - (monthDayNum2[month - 1] - day);
-			}
+			var dayOrdinal = (month == 1) && (31  - (monthDayNum1[month - 1] - day))
+				|| (month == 2 && judgeLeapYear) && (31 + 29  - (monthDayNum1[month - 1] - day))
+				|| (month == 2 && !judgeLeapYear) && (31 + 28  - (monthDayNum2[month - 1] - day))
+				|| (month < 8 && judgeLeapYear) && (30 * (month - 1) + Math.ceil(month / 2) + 29 - (monthDayNum1[month - 1] - day))
+				|| (month < 8 && !judgeLeapYear) && (30 * (month - 1) + Math.ceil(month / 2) + 28 - (monthDayNum2[month - 1] - day))
+				|| (judgeLeapYear) && (30 * (month - 1) + Math.floor(month / 2) + 29 - (monthDayNum1[month - 1] - day))
+				|| (30 * (month - 1) + Math.floor(month / 2) + 28 - (monthDayNum2[month - 1] - day));
 			// 阴历日期=14Q+10.6(R+1)+年内日期序数-29.5n（注:式中Q[quotient:商]、R[remainder:余数]、n均为自然数，R<4）
 			var F = (14 * quotient + 10.6 * (remainder + 1) + dayOrdinal);
 			var m = (F / 29.5 < 6) && (F / 29.5 + 12) || (F / 29.5);

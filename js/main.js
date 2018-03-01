@@ -58,29 +58,7 @@ $(function(){
 		// var minutes = date.getMinutes();
 		// var seconds = date.getSeconds();
 		var week = date.getDay();
-		switch(week){
-			case 1: 
-				week = '一';
-				break;
-			case 2: 
-				week = '二';
-				break;
-			case 3: 
-				week = '三';
-				break;
-			case 4: 
-				week = '四';
-				break;
-			case 5: 
-				week = '五';
-				break;
-			case 6: 
-				week = '六';
-				break;
-			case 0: 
-				week = '日';
-				break;
-		}
+		week = (week == 1 && (week = '一')) || (week == 2 && (week = '二')) || (week == 3 && (week = '三')) || (week == 4 && (week = '四')) || (week == 5 && (week = '五')) || (week == 6 && (week = '六')) || (week == 0 && (week = '日'));
 		// return year + '/' + add0(month) + '/' + add0(day) + ' ' + add0(hours) + ':' + add0(minutes) + ':' + add0(seconds);
 		return [year,add0(month),add0(day)].join('/') + ' 星期' + week;
 	}
