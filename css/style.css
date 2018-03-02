@@ -14,8 +14,8 @@
 .canlender-days .item.enabled{border-color: #fff; background: #f8f8f8;}
 .canlender-week .item.selected,.canlender-days .item.enabled.selected,.canlender-days .item.enabled:hover{border: solid 2px #fb0;}
 .canlender-days .item{font-size: 20px;color: #333;}
-.canlender-days .item .item-solar-term,.canlender-days .item .item-lunar-date{font-size: 12px;line-height: 12px;color: #333;}
-.canlender-days .item .item-lunar-date{color: #999;}
+.canlender-days .item .item-solar-term,.canlender-days .item .item-lunar-date,.canlender-days .item .item-festival{font-size: 12px;line-height: 12px;color: #333;}
+.canlender-days .item .item-lunar-date,.canlender-days .item .item-festival{color: #999;}
 .canlender-right-date{margin-top: 10px;}
 .canlender-right-day{display: inline-block;width: 80px;height: 80px;margin-top: 15px;line-height: 80px;border-radius: 6px;background: #fb0;font-size: 48px;}
 .canlender-right-lunar{margin-top: 10px;}

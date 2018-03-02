@@ -129,24 +129,29 @@ $(function(){
 			$('.canlender-days .item').css({'height':'60px'});
 		}
 	}
-	// 添加节气和农历到对应的日期
-	function addSolarTermAndLunarDate(year, month, daysNum){
+	// 添加节气、农历、节日到对应的日期
+	function addSolarTermAndLunarDateAndFestival(year, month){
 		// 传进来的年月可能是字符串，需要转成数字
 		year = parseInt(year);
 		month = parseInt(month);
-		daysNum = parseInt(daysNum);
-		for(i = 1; i <= daysNum; i++){
-			var solarTerm = window.ZTools.getSolarTerms(year, month, i);
-			var lunarDay = window.ZTools.getLunarDate(year, month, i).slice(2);
-			var dayItem = $('.canlender-days .item.enabled').eq(i - 1);
-			var dayValue = dayItem.data('value');
-
-			if(solarTerm && dayValue == i){
-				dayItem.append('<p class="item-solar-term">' + solarTerm + '</p>');
-			}else if(dayValue == i){
-				dayItem.append('<p class="item-lunar-date">' + lunarDay + '</p>');
+		$('.canlender-days .item.enabled').each(function(){
+			var $this = $(this);
+			var day = $this.data('value');
+			var solarTerm = window.ZTools.getSolarTerms(year, month, day);
+			var lunarDay = window.ZTools.getLunarDate(year, month, day).slice(2);
+			var festival = window.ZTools.getFestival(year, month, day);
+			if(lunarDay){
+				$this.append('<p class="item-lunar-date">' + lunarDay + '</p>');
 			}
-		}
+			if(solarTerm){
+				$this.append('<p class="item-solar-term">' + solarTerm + '</p>');
+				$this.find('.item-lunar-date').remove();
+			}
+			if(festival){
+				$this.append('<p class="item-festival">' + festival + '</p>');
+				$this.find('.item-lunar-date').remove();
+			}
+		});
 	}
 	// 通过月份判断该月天数并设置内容
 	function judgeMonthAndSetDayItem(year, month, day){
@@ -177,7 +182,7 @@ $(function(){
 		$('.canlender-days').html(dayItem);
 
 		// 需要先setHtml设置完内容再做其他操作
-		addSolarTermAndLunarDate(year, month, daysNum);
+		addSolarTermAndLunarDateAndFestival(year, month, day);
 
 		selectItem('.canlender-year option', year);
 		selectItem('.canlender-month option', month);
@@ -188,7 +193,7 @@ $(function(){
 		displayDate();
 		$('.today-lunar-date').html(window.ZTools.getLunarDate(year, month, day));
 		$('.today-lunar-year').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesYear(year));
-		$('.today-lunar-md').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesMonthAndDay(year));
+		// $('.today-lunar-md').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesMonthAndDay(year));
 	}
 	// 事件选择器
 	function eventFilter(selector, event, value, childrenSelector){
