@@ -140,6 +140,7 @@ $(function(){
 			var solarTerm = window.ZTools.getSolarTerms(year, month, day);
 			var lunarDay = window.ZTools.getLunarDate(year, month, day).slice(2);
 			var festival = window.ZTools.getFestival(year, month, day);
+			var festivalText,lunerFestival,festivalTitleText;
 			if(lunarDay){
 				$this.append('<p class="item-lunar-date">' + lunarDay + '</p>');
 			}
@@ -148,7 +149,19 @@ $(function(){
 				$this.find('.item-lunar-date').remove();
 			}
 			if(festival){
-				$this.append('<p class="item-festival">' + festival + '</p>');
+				festivalText = festival.split(' ')[0];
+				lunerFestival = festival.split(' ')[1];
+				if(festivalText == 'undefined' && lunerFestival == 'undefined'){
+					return;
+				}else if(festivalText !== 'undefined' && lunerFestival == 'undefined'){
+					festivalTitleText = festivalText;
+				}else if(festivalText !== 'undefined' && lunerFestival !== 'undefined'){
+					festivalTitleText = festivalText + ' ' + lunerFestival;
+				}else{
+					festivalText = lunerFestival;
+					festivalTitleText = lunerFestival;
+				}
+				$this.append('<p class="item-festival" title="' + festivalTitleText + '">' + festivalText + '</p>');
 				$this.find('.item-lunar-date').remove();
 			}
 		});
@@ -182,7 +195,7 @@ $(function(){
 		$('.canlender-days').html(dayItem);
 
 		// 需要先setHtml设置完内容再做其他操作
-		addSolarTermAndLunarDateAndFestival(year, month, day);
+		addSolarTermAndLunarDateAndFestival(year, month);
 
 		selectItem('.canlender-year option', year);
 		selectItem('.canlender-month option', month);
@@ -192,6 +205,7 @@ $(function(){
 		calcCompleteWeek(year, month, day);
 		displayDate();
 		$('.today-lunar-date').html(window.ZTools.getLunarDate(year, month, day));
+		$('.today-lunar-date').append(window.ZTools.getSolarTerms(year, month, day));
 		$('.today-lunar-year').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesYear(year));
 		// $('.today-lunar-md').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesMonthAndDay(year));
 	}

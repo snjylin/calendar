@@ -2,7 +2,7 @@
 .fr{float: right;}
 .clearfix:after{content: '';display: block;visibility: hidden;clear: both;}
 .clearfix{*zoom:1;}
-.canlender-wrapper{width: 700px;margin: auto;border: solid 2px #5caeff;}
+.canlender-wrapper{width: 800px;margin: auto;border: solid 2px #5caeff;}
 .canlender-left{width: 75%;}
 .canlender-right{width: 25%;height: 410px;background: #5caeff;text-align: center;color: #fff;}
 .canlender-left-header{height: 30px;padding: 10px 10px 0 10px;line-height: 30px;}
