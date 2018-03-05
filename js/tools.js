@@ -191,7 +191,7 @@
 	}
 
 	// 干支纪年
-	function HeavenlyStemsAndEarthlyBranchesYear(year){
+	function heavenlyStemsAndEarthlyBranchesYear(year){
 		// 传进来的年可能是字符串，需要转成数字
 		year = parseInt(year);
 		// 甲->己->庚->癸编号 4->10->0->3 取余对应的编号即为对应的天干
@@ -204,7 +204,7 @@
 		return heavenlyStems[num1] + earthlyBranches[num2] + '年 【' + chineseZodiac[num2] + '年】';
 	}
 	// 干支纪月 干支纪日
-	function HeavenlyStemsAndEarthlyBranchesMonthAndDay(month, day){
+	function heavenlyStemsAndEarthlyBranchesMonthAndDay(month, day){
 		month = parseInt(month);
 		day = parseInt(day);
 		// 甲->己->庚->癸编号 4->10->0->3 取余对应的编号即为对应的天干
@@ -222,7 +222,7 @@
 	tools.getSolarTerms = getSolarTerms;
 	tools.getLunarDate = getLunarDate;
 	tools.getFestival = getFestival;
-	tools.HeavenlyStemsAndEarthlyBranchesYear = HeavenlyStemsAndEarthlyBranchesYear;
-	tools.HeavenlyStemsAndEarthlyBranchesMonthAndDay = HeavenlyStemsAndEarthlyBranchesMonthAndDay;
+	tools.heavenlyStemsAndEarthlyBranchesYear = heavenlyStemsAndEarthlyBranchesYear;
+	tools.heavenlyStemsAndEarthlyBranchesMonthAndDay = heavenlyStemsAndEarthlyBranchesMonthAndDay;
 	window.ZTools = tools;
 })();

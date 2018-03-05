@@ -207,8 +207,8 @@ $(function(){
 		displayDate();
 		$('.today-lunar-date').html(window.ZTools.getLunarDate(year, month, day));
 		$('.today-lunar-date').append(window.ZTools.getSolarTerms(year, month, day));
-		$('.today-lunar-year').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesYear(year));
-		// $('.today-lunar-md').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesMonthAndDay(year));
+		$('.today-lunar-year').html(window.ZTools.heavenlyStemsAndEarthlyBranchesYear(year));
+		// $('.today-lunar-md').html(window.ZTools.heavenlyStemsAndEarthlyBranchesMonthAndDay(year));
 	}
 	// 事件选择器
 	function eventFilter(selector, event, value, childrenSelector){
