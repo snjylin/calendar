@@ -104,16 +104,16 @@
 			// 公元年数－1977（或1901）＝4Q(商)＋R(余数)
 			var quotient = Math.floor((year - 1977)/4);
 			var remainder = (year - 1977 ) % 4;
-			var judgeLeapYear = window.ZTools.judgeLeapYear(year);
+			var leapYear = window.ZTools.judgeLeapYear(year);
 			var monthDayNum1 = new Array(31,29,31,30,31,30,31,31,30,31,30,31);
 			var monthDayNum2 = new Array(31,28,31,30,31,30,31,31,30,31,30,31);
 			// 计算年内日期序数
 			var dayOrdinal = (month == 1) && (31  - (monthDayNum1[month - 1] - day))
-				|| (month == 2 && judgeLeapYear) && (31 + 29  - (monthDayNum1[month - 1] - day))
-				|| (month == 2 && !judgeLeapYear) && (31 + 28  - (monthDayNum2[month - 1] - day))
-				|| (month < 8 && judgeLeapYear) && (30 * (month - 1) + Math.ceil(month / 2) + 29 - (monthDayNum1[month - 1] - day))
-				|| (month < 8 && !judgeLeapYear) && (30 * (month - 1) + Math.ceil(month / 2) + 28 - (monthDayNum2[month - 1] - day))
-				|| (judgeLeapYear) && (30 * (month - 1) + Math.floor(month / 2) + 29 - (monthDayNum1[month - 1] - day))
+				|| (month == 2 && leapYear) && (31 + 29  - (monthDayNum1[month - 1] - day))
+				|| (month == 2 && !leapYear) && (31 + 28  - (monthDayNum2[month - 1] - day))
+				|| (month < 8 && leapYear) && (30 * (month - 1) + Math.ceil(month / 2) + 29 - (monthDayNum1[month - 1] - day))
+				|| (month < 8 && !leapYear) && (30 * (month - 1) + Math.ceil(month / 2) + 28 - (monthDayNum2[month - 1] - day))
+				|| (leapYear) && (30 * (month - 1) + Math.floor(month / 2) + 29 - (monthDayNum1[month - 1] - day))
 				|| (30 * (month - 1) + Math.floor(month / 2) + 28 - (monthDayNum2[month - 1] - day));
 			// 阴历日期=14Q+10.6(R+1)+年内日期序数-29.5n（注:式中Q[quotient:商]、R[remainder:余数]、n均为自然数，R<4）
 			var F = (14 * quotient + 10.6 * (remainder + 1) + dayOrdinal);

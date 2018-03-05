@@ -173,11 +173,12 @@ $(function(){
 		month = parseInt(month);
 		day = parseInt(day);
 		var data_days_copy = null;
+		var leapYear = window.ZTools.judgeLeapYear(year);
 		var daysNum;
 		// 判断该月天数
 		if( month == 2 ){
 			//判断闰年
-			if((year % 400 == 0) || (year % 4 == 0) && (year % 100 != 0)){
+			if(leapYear){
 				data_days_copy = data_days.slice(0, 29);	// 闰年
 				daysNum = 29;
 			}else{
