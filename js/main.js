@@ -163,6 +163,7 @@ $(function(){
 				}
 				$this.append('<p class="item-festival" title="' + festivalTitleText + '">' + festivalText + '</p>');
 				$this.find('.item-lunar-date').remove();
+				$this.find('.item-solar-term').remove();
 			}
 		});
 	}
@@ -206,7 +207,9 @@ $(function(){
 		calcCompleteWeek(year, month, day);
 		displayDate();
 		$('.today-lunar-date').html(window.ZTools.getLunarDate(year, month, day));
-		$('.today-lunar-date').append(window.ZTools.getSolarTerms(year, month, day));
+		if(window.ZTools.getSolarTerms(year, month, day)){
+			$('.today-lunar-date').append(' ' + window.ZTools.getSolarTerms(year, month, day));
+		}
 		$('.today-lunar-year').html(window.ZTools.heavenlyStemsAndEarthlyBranchesYear(year));
 		// $('.today-lunar-md').html(window.ZTools.heavenlyStemsAndEarthlyBranchesMonthAndDay(year));
 	}
