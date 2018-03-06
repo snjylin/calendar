@@ -73,7 +73,7 @@ $(function(){
 		var year = $('.canlender-year select').val();
 		var month = $('.canlender-month select').val();
 		var day = $('.canlender-day select').val();
-		var timestamp = window.ZTools.setDateTime(year, month, day) || new Date().getTime();
+		var timestamp = window.ZTools.setDateTime(year, month, day);
 		$('.canlender-right-date').html( timeFormat(timestamp) );
 		$('.canlender-right-day').html(new Date(timestamp).getDate());
 	}
@@ -211,7 +211,9 @@ $(function(){
 			$('.today-lunar-date').append(' ' + window.ZTools.getSolarTerms(year, month, day));
 		}
 		$('.today-lunar-year').html(window.ZTools.heavenlyStemsAndEarthlyBranchesYear(year));
-		// $('.today-lunar-md').html(window.ZTools.heavenlyStemsAndEarthlyBranchesMonthAndDay(year));
+		var calcMonth = window.ZTools.heavenlyStemsAndEarthlyBranchesMonth(year, month, day);
+		var calcDay = window.ZTools.heavenlyStemsAndEarthlyBranchesDay(year, month, day);
+		$('.today-lunar-md').html(calcMonth + ' ' + calcDay);
 	}
 	// 事件选择器
 	function eventFilter(selector, event, value, childrenSelector){

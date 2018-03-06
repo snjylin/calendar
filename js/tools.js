@@ -203,17 +203,73 @@
 		var num2 = (year + 8) % 12;
 		return heavenlyStems[num1] + earthlyBranches[num2] + '年 【' + chineseZodiac[num2] + '年】';
 	}
-	// 干支纪月 干支纪日
-	function heavenlyStemsAndEarthlyBranchesMonthAndDay(month, day){
+	// 干支纪月
+	function heavenlyStemsAndEarthlyBranchesMonth(year, month, day){
+		year = parseInt(year);
+		month = parseInt(month);
+		day = parseInt(day);
+		var lunarMonthArr = new Array('腊月','正月','二月','三月','四月','五月','六月','七月','八月','九月','十月','冬月');
+		// 甲->己->庚->癸编号 4->10->0->3 取余对应的编号即为对应的天干
+		var heavenlyStems = new Array('甲','乙','丙','丁','戊','己','庚','辛','壬','癸');
+		// 子->未->申->亥编号 4->12->0->3 取余对应的编号即为对应的地支
+		var earthlyBranches = new Array('子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥');
+		// 带“寅”的干支只有五个，也就是丙寅、戊寅、庚寅、壬寅和甲寅。
+		// 第一年，为甲子年，正月为丙寅，二月为丁卯……十二月为丁丑。
+		// 第二年，为乙丑年，正月为戊寅，其他各月依次类推。
+		// 第三年，为丙寅年，正月为庚寅，其他各月依次类推。
+		// 第四年，为丁卯年，正月为壬寅，其他各月依次类推。
+		// 第五年，为戊辰年，正月为甲寅，其他各月依次类推。
+		// 再继续下去，到第六年，也就是己已年，正月又为丙寅，二月为丁卯……十二月为丁丑。说明这时候，月的干支又开始了新一轮的五年期的重复。
+		var lunarMonth = window.ZTools.getLunarDate(year, month, day).slice(0, 2);
+		var heavenlyStemsYear = window.ZTools.heavenlyStemsAndEarthlyBranchesYear(year).slice(0, 1);
+		var calcMonth;
+		var lunarMonthArrLen = lunarMonthArr.length;
+		for(i = 0; i < lunarMonthArrLen; i++){
+			if(lunarMonth === lunarMonthArr[i]){
+				var num1,num2;
+				if(heavenlyStemsYear === '甲' || heavenlyStemsYear === '己'){
+					num1 = (i + 2) % 10;
+				}else if(heavenlyStemsYear === '乙' || heavenlyStemsYear === '庚'){
+					num1 = (i + 4) % 10;
+				}else if(heavenlyStemsYear === '丙' || heavenlyStemsYear === '辛'){
+					num1 = (i + 6) % 10;
+				}else if(heavenlyStemsYear === '丁' || heavenlyStemsYear === '壬'){
+					num1 = (i + 8) % 10;
+				}else if(heavenlyStemsYear === '戊' || heavenlyStemsYear === '癸'){
+					num1 = i % 10;
+				}
+				num2 = (i + 2) % 12;
+				calcMonth = heavenlyStems[num1] + earthlyBranches[num2];
+			}
+		}
+		return calcMonth + '月';
+	}
+	// 干支纪日
+	function heavenlyStemsAndEarthlyBranchesDay(year, month, day){
 		month = parseInt(month);
 		day = parseInt(day);
 		// 甲->己->庚->癸编号 4->10->0->3 取余对应的编号即为对应的天干
 		var heavenlyStems = new Array('甲','乙','丙','丁','戊','己','庚','辛','壬','癸');
 		// 子->未->申->亥编号 4->12->0->3 取余对应的编号即为对应的地支
 		var earthlyBranches = new Array('子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥');
-		var num1 = (month + 6) % 10;
-		var num2 = (month + 8) % 12;
-		return heavenlyStems[num1] + earthlyBranches[num2] + '月 ' + heavenlyStems[num1] + earthlyBranches[num2] + '日';
+		// g=4C+[C/4]+[5y]+[y/4]+[3*(m+1)/5]+d-3
+		// z=8C+[C/4]+[5y]+[y/4]+[3*(m+1)/5]+d+7+i
+		// 其中c是世纪数减1.奇数月 i=0,偶数月 i=6,年份前两位,y 是年份后两位,M 是月份,d 是日数.[ ] 表示取整数.
+		// 1月和 2月按上一年的 13月和 14月来算,因此C和y也要按上一年的年份来取值.
+		// g 除以 10 的余数是天干,z 除以 12 的余数是地支.
+		// 如果先求得了g,那么z=g+4C+10+i(奇数月i=0,偶数月i=6)
+		var C = year.toString().slice(0,2);
+		var y = year.toString().slice(2);
+		var g,z,num1,num2;
+		i = (month % 2 === 0) ? 6 : 0;
+
+		g = 4*C + Math.floor(C/4) + Math.floor(5*y) + Math.floor(y/4) + Math.floor(3*(month+1)/5) + day - 3;
+		z = g + 4*C + 10 + i;console.log(z % 12);
+
+		num1 = (g + 9) % 10;
+		num2 = (z + 11) % 12;
+		var calcDay = heavenlyStems[num1] + earthlyBranches[num2];
+		return calcDay + '日';
 	}
 
 	var tools = {};
@@ -223,6 +279,7 @@
 	tools.getLunarDate = getLunarDate;
 	tools.getFestival = getFestival;
 	tools.heavenlyStemsAndEarthlyBranchesYear = heavenlyStemsAndEarthlyBranchesYear;
-	tools.heavenlyStemsAndEarthlyBranchesMonthAndDay = heavenlyStemsAndEarthlyBranchesMonthAndDay;
+	tools.heavenlyStemsAndEarthlyBranchesMonth = heavenlyStemsAndEarthlyBranchesMonth;
+	tools.heavenlyStemsAndEarthlyBranchesDay = heavenlyStemsAndEarthlyBranchesDay;
 	window.ZTools = tools;
 })();
