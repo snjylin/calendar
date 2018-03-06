@@ -10,7 +10,7 @@
 		}else{
 			// 传进来的年月日可能是字符串，需要转成数字
 			year = parseInt(year) || date.getFullYear();
-			month = (parseInt(month) - 1) || date.getMonth();
+			month = (month == 1) ? 0 : ((parseInt(month) - 1) || date.getMonth());
 			day = parseInt(day) || date.getDate();
 		}
 		timestamp = date.setFullYear(year);
@@ -264,7 +264,7 @@
 		i = (month % 2 === 0) ? 6 : 0;
 
 		g = 4*C + Math.floor(C/4) + Math.floor(5*y) + Math.floor(y/4) + Math.floor(3*(month+1)/5) + day - 3;
-		z = g + 4*C + 10 + i;console.log(z % 12);
+		z = g + 4*C + 10 + i;
 
 		num1 = (g + 9) % 10;
 		num2 = (z + 11) % 12;
