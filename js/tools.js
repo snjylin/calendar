@@ -10,7 +10,7 @@
 		}else{
 			// 传进来的年月日可能是字符串，需要转成数字
 			year = parseInt(year) || date.getFullYear();
-			month = (month == 1) ? 0 : ((parseInt(month) - 1) || date.getMonth());
+			month = month ? (parseInt(month) - 1) : date.getMonth();
 			day = parseInt(day) || date.getDate();
 		}
 		timestamp = date.setFullYear(year);
