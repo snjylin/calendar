@@ -2,22 +2,22 @@
 .fr{float: right;}
 .clearfix:after{content: '';display: block;visibility: hidden;clear: both;}
 .clearfix{*zoom:1;}
-.canlender-wrapper{width: 800px;margin: auto;border: solid 2px #5caeff;}
-.canlender-left{width: 75%;}
-.canlender-right{width: 25%;height: 410px;background: #5caeff;text-align: center;color: #fff;}
-.canlender-left-header{height: 30px;padding: 10px 10px 0 10px;line-height: 30px;}
-.canlender-day,.canlender-month,.canlender-year{padding-right: 10px;}
+.calendar-wrapper{width: 800px;margin: auto;border: solid 2px #5caeff;}
+.calendar-left{width: 75%;}
+.calendar-right{width: 25%;height: 410px;background: #5caeff;text-align: center;color: #fff;}
+.calendar-left-header{height: 30px;padding: 10px 10px 0 10px;line-height: 30px;}
+.calendar-day,.calendar-month,.calendar-year{padding-right: 10px;}
 .back-to-today{margin-left: 12px;padding: 0 6px;border: solid 1px #ccc;border-radius: 6px;cursor: pointer;}
-.canlender-left-body{margin-top: 10px;padding: 0 10px 10px 10px;}
-.canlender-week{height: 50px;}
-.canlender-week .item,.canlender-days .item{float: left;width: -moz-calc( 100% / 7 );width: -webkit-calc( 100% / 7 );width: calc( 100% / 7 );height: 50px;text-align: center;border: solid 2px transparent;cursor: default;-moz-box-sizing: -webkit-border-box;box-sizing: border-box;}
-.canlender-days .item.enabled{border-color: #fff; background: #f8f8f8;}
-.canlender-week .item.selected,.canlender-days .item.enabled.selected,.canlender-days .item.enabled:hover{border: solid 2px #fb0;}
-.canlender-days .item{font-size: 20px;color: #333;}
-.canlender-days .item .item-solar-term,.canlender-days .item .item-lunar-date,.canlender-days .item .item-festival{font-size: 12px;line-height: 12px;color: #333;}
-.canlender-days .item .item-lunar-date,.canlender-days .item .item-festival{color: #999;}
-.canlender-right-date{margin-top: 10px;}
-.canlender-right-day{display: inline-block;width: 80px;height: 80px;margin-top: 15px;line-height: 80px;border-radius: 6px;background: #fb0;font-size: 48px;}
-.canlender-right-lunar{margin-top: 10px;}
-.canlender-right-lunar span{display: block;}
-.canlender-small{font-size: 12px;}
+.calendar-left-body{margin-top: 10px;padding: 0 10px 10px 10px;}
+.calendar-week{height: 50px;}
+.calendar-week .item,.calendar-days .item{float: left;width: -moz-calc( 100% / 7 );width: -webkit-calc( 100% / 7 );width: calc( 100% / 7 );height: 50px;text-align: center;border: solid 2px transparent;cursor: default;-moz-box-sizing: -webkit-border-box;box-sizing: border-box;}
+.calendar-days .item.enabled{border-color: #fff; background: #f8f8f8;}
+.calendar-week .item.selected,.calendar-days .item.enabled.selected,.calendar-days .item.enabled:hover{border: solid 2px #fb0;}
+.calendar-days .item{font-size: 20px;color: #333;}
+.calendar-days .item .item-solar-term,.calendar-days .item .item-lunar-date,.calendar-days .item .item-festival{font-size: 12px;line-height: 12px;color: #333;}
+.calendar-days .item .item-lunar-date,.calendar-days .item .item-festival{color: #999;}
+.calendar-right-date{margin-top: 10px;}
+.calendar-right-day{display: inline-block;width: 80px;height: 80px;margin-top: 15px;line-height: 80px;border-radius: 6px;background: #fb0;font-size: 48px;}
+.calendar-right-lunar{margin-top: 10px;}
+.calendar-right-lunar span{display: block;}
+.calendar-small{font-size: 12px;}

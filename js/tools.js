@@ -92,19 +92,19 @@
 		month = parseInt(month);
 		day = parseInt(day);
 		var lunarMonth,lunarDay;
-		$('.canlender-days .item.enabled').each(function(){
+		$('.calendar-days .item.enabled').each(function(){
 			if(day !== $(this).data('value')){
 				return;
 			}
 			var lunarMonthArr = new Array('腊月','正月','二月','三月','四月','五月','六月','七月','八月','九月','十月','冬月');
 			var lunarDayArr = new Array('初一','初二','初三','初四','初五','初六','初七','初八','初九','初十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十');
 			var solarTermArr = new Array('小寒','大寒','立春','雨水','惊蛰','春分','清明','谷雨','立夏','小满','芒种','夏至','小暑','大暑','立秋','处暑','白露','秋分','寒露','霜降','立冬','小雪','大雪','冬至');
-			var solarTerm = $('.canlender-days .item.enabled').find('.solar-term').eq(0).text();
+			var solarTerm = $('.calendar-days .item.enabled').find('.solar-term').eq(0).text();
 			var len = solarTermArr.length;
 			// 公元年数－1977（或1901）＝4Q(商)＋R(余数)
 			var quotient = Math.floor((year - 1977)/4);
 			var remainder = (year - 1977 ) % 4;
-			var leapYear = window.ZTools.judgeLeapYear(year);
+			var leapYear = window.Tools.judgeLeapYear(year);
 			var monthDayNum1 = new Array(31,29,31,30,31,30,31,31,30,31,30,31);
 			var monthDayNum2 = new Array(31,28,31,30,31,30,31,31,30,31,30,31);
 			// 计算年内日期序数
@@ -141,7 +141,7 @@
 			'5月1日','5月4日','5月12日','5月30日','5月31日','6月1日','6月1日','6月5日','6月18日','6月25日','6月26日','7月1日','7月7日','7月11日','8月12日','9月10日','9月16日','9月27日','10月1日','10月4日','10月5日','10月10日','10月15日','10月22日','11月17日','12月3日','12月4日','12月9日','12月12日','12月24日','12月25日','12月26日','12月29日');
 		var lunarFestivalDateArr = new Array('腊月廿九','正月初一','正月十五','正月十六','正月十七','正月十八','正月十九','正月二十','正月廿五','正月廿九','二月初一','二月初二','二月二','二月初八','三月十五','三月十五','三月十六','三月十七','三月十八','三月十九','三月二十','三月廿一','三月廿二','三月廿三','三月廿四','三月廿五','四月初八','四月十八','五月初五','五月十三','五月廿二','五月廿九','六月初六','六月廿四','七月初七','七月十三','七月十五','八月十五');
 		var date = month + '月' + day + '日';
-		var lunarDate = window.ZTools.getLunarDate(year, month, day);
+		var lunarDate = window.Tools.getLunarDate(year, month, day);
 		var festivalDateArrLen = festivalDateArr.length;
 		var lunarFestivalDateArrLen = lunarFestivalDateArr.length;
 		var festival,festival1,festival2;
@@ -169,22 +169,22 @@
 		 * 9月第四个星期日国际聋人节
 		 */
 		var calcFestivalArr = new Array('国际麻风节','中小学生安全教育日','复活节','母亲节','父亲节','国际和平日','国际聋人节');
-		if(month == 1 && (31 - window.ZTools.setDateTime(year, 1, 1).getDay()) == day){
+		if(month == 1 && (31 - window.Tools.setDateTime(year, 1, 1).getDay()) == day){
 			festival = calcFestivalArr[0];
 		}
-		if(month == 3 && (31 - window.ZTools.setDateTime(year, 3, 31).getDay() - 6) == day){
+		if(month == 3 && (31 - window.Tools.setDateTime(year, 3, 31).getDay() - 6) == day){
 			festival = calcFestivalArr[1];
 		}
-		if(month == 5 && (14 - window.ZTools.setDateTime(year, 5, 1).getDay() + 1) == day){
+		if(month == 5 && (14 - window.Tools.setDateTime(year, 5, 1).getDay() + 1) == day){
 			festival = calcFestivalArr[4];
 		}
-		if(month == 6 && (21 - window.ZTools.setDateTime(year, 6, 1).getDay() + 1) == day){
+		if(month == 6 && (21 - window.Tools.setDateTime(year, 6, 1).getDay() + 1) == day){
 			festival = calcFestivalArr[5];
 		}
-		if(month == 9 && (21 + 2 - window.ZTools.setDateTime(year, 9, 1).getDay() + 1) == day){
+		if(month == 9 && (21 + 2 - window.Tools.setDateTime(year, 9, 1).getDay() + 1) == day){
 			festival = calcFestivalArr[6];
 		}
-		if(month == 9 && (28 - window.ZTools.setDateTime(year, 9, 1).getDay() + 1) == day){
+		if(month == 9 && (28 - window.Tools.setDateTime(year, 9, 1).getDay() + 1) == day){
 			festival = calcFestivalArr[7];
 		}
 		return festival;
@@ -220,8 +220,8 @@
 		// 第四年，为丁卯年，正月为壬寅，其他各月依次类推。
 		// 第五年，为戊辰年，正月为甲寅，其他各月依次类推。
 		// 再继续下去，到第六年，也就是己已年，正月又为丙寅，二月为丁卯……十二月为丁丑。说明这时候，月的干支又开始了新一轮的五年期的重复。
-		var lunarMonth = window.ZTools.getLunarDate(year, month, day).slice(0, 2);
-		var heavenlyStemsYear = window.ZTools.heavenlyStemsAndEarthlyBranchesYear(year).slice(0, 1);
+		var lunarMonth = window.Tools.getLunarDate(year, month, day).slice(0, 2);
+		var heavenlyStemsYear = window.Tools.heavenlyStemsAndEarthlyBranchesYear(year).slice(0, 1);
 		var calcMonth;
 		var lunarMonthArrLen = lunarMonthArr.length;
 		for(i = 0; i < lunarMonthArrLen; i++){
@@ -281,5 +281,5 @@
 	tools.heavenlyStemsAndEarthlyBranchesYear = heavenlyStemsAndEarthlyBranchesYear;
 	tools.heavenlyStemsAndEarthlyBranchesMonth = heavenlyStemsAndEarthlyBranchesMonth;
 	tools.heavenlyStemsAndEarthlyBranchesDay = heavenlyStemsAndEarthlyBranchesDay;
-	window.ZTools = tools;
+	window.Tools = tools;
 })();
