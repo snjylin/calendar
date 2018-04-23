@@ -73,7 +73,7 @@ $(function(){
 		var year = $('.calendar-year select').val();
 		var month = $('.calendar-month select').val();
 		var day = $('.calendar-day select').val();
-		var timestamp = window.ZTools.setDateTime(year, month, day) || new Date().getTime();
+		var timestamp = window.Tools.setDateTime(year, month, day);
 		$('.calendar-right-date').html( timeFormat(timestamp) );
 		$('.calendar-right-day').html(new Date(timestamp).getDate());
 	}
@@ -94,7 +94,7 @@ $(function(){
 	}
 	// 选中当前选中日期对应的星期
 	function selectWeek(year, month, day){
-		var date = window.ZTools.setDateTime( year, month, day );
+		var date = window.Tools.setDateTime( year, month, day );
 		var weekday = date.getDay();
 		weekday = weekday ? weekday : 7;
 		$('.calendar-week .item').eq(weekday - 1).addClass('selected').siblings().removeClass('selected');
@@ -102,7 +102,7 @@ $(function(){
 	// 当月1号不为周一时补全从周一开始的部分，当月最后一天不为周日补全到周日结束的部分，用于占位
 	function calcCompleteWeek(year, month, day){
 		$('.calendar-days').find('.disabled').remove();
-		var date = window.ZTools.setDateTime( year, month, 1 );
+		var date = window.Tools.setDateTime( year, month, 1 );
 		var week = new Date(date).getDay();
 		week = week ? week : 7;
 		var html = '<div class="item disabled"></div>';
@@ -129,24 +129,43 @@ $(function(){
 			$('.calendar-days .item').css({'height':'60px'});
 		}
 	}
-	// 添加节气和农历到对应的日期
-	function addSolarTermAndLunarDate(year, month, daysNum){
+	// 添加节气、农历、节日到对应的日期
+	function addSolarTermAndLunarDateAndFestival(year, month){
 		// 传进来的年月可能是字符串，需要转成数字
 		year = parseInt(year);
 		month = parseInt(month);
-		daysNum = parseInt(daysNum);
-		for(i = 1; i <= daysNum; i++){
-			var solarTerm = window.ZTools.getSolarTerms(year, month, i);
-			var lunarDay = window.ZTools.getLunarDate(year, month, i).slice(2);
-			var dayItem = $('.calendar-days .item.enabled').eq(i - 1);
-			var dayValue = dayItem.data('value');
-
-			if(solarTerm && dayValue == i){
-				dayItem.append('<p class="item-solar-term">' + solarTerm + '</p>');
-			}else if(dayValue == i){
-				dayItem.append('<p class="item-lunar-date">' + lunarDay + '</p>');
+		$('.calendar-days .item.enabled').each(function(){
+			var $this = $(this);
+			var day = $this.data('value');
+			var solarTerm = window.Tools.getSolarTerms(year, month, day);
+			var lunarDay = window.Tools.getLunarDate(year, month, day).slice(2);
+			var festival = window.Tools.getFestival(year, month, day);
+			var festivalText,lunerFestival,festivalTitleText;
+			if(lunarDay){
+				$this.append('<p class="item-lunar-date">' + lunarDay + '</p>');
 			}
-		}
+			if(solarTerm){
+				$this.append('<p class="item-solar-term">' + solarTerm + '</p>');
+				$this.find('.item-lunar-date').remove();
+			}
+			if(festival){
+				festivalText = festival.split(' ')[0];
+				lunerFestival = festival.split(' ')[1];
+				if(festivalText == 'undefined' && lunerFestival == 'undefined'){
+					return;
+				}else if(festivalText !== 'undefined' && lunerFestival == 'undefined'){
+					festivalTitleText = festivalText;
+				}else if(festivalText !== 'undefined' && lunerFestival !== 'undefined'){
+					festivalTitleText = festivalText + ' ' + lunerFestival;
+				}else{
+					festivalText = lunerFestival;
+					festivalTitleText = lunerFestival;
+				}
+				$this.append('<p class="item-festival" title="' + festivalTitleText + '">' + festivalText + '</p>');
+				$this.find('.item-lunar-date').remove();
+				$this.find('.item-solar-term').remove();
+			}
+		});
 	}
 	// 通过月份判断该月天数并设置内容
 	function judgeMonthAndSetDayItem(year, month, day){
@@ -155,11 +174,12 @@ $(function(){
 		month = parseInt(month);
 		day = parseInt(day);
 		var data_days_copy = null;
+		var leapYear = window.Tools.judgeLeapYear(year);
 		var daysNum;
 		// 判断该月天数
 		if( month == 2 ){
 			//判断闰年
-			if((year % 400 == 0) || (year % 4 == 0) && (year % 100 != 0)){
+			if(leapYear){
 				data_days_copy = data_days.slice(0, 29);	// 闰年
 				daysNum = 29;
 			}else{
@@ -177,7 +197,7 @@ $(function(){
 		$('.calendar-days').html(dayItem);
 
 		// 需要先setHtml设置完内容再做其他操作
-		addSolarTermAndLunarDate(year, month, daysNum);
+		addSolarTermAndLunarDateAndFestival(year, month);
 
 		selectItem('.calendar-year option', year);
 		selectItem('.calendar-month option', month);
@@ -186,9 +206,14 @@ $(function(){
 		// selectWeek(year, month, day);
 		calcCompleteWeek(year, month, day);
 		displayDate();
-		$('.today-lunar-date').html(window.ZTools.getLunarDate(year, month, day));
-		$('.today-lunar-year').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesYear(year));
-		$('.today-lunar-md').html(window.ZTools.HeavenlyStemsAndEarthlyBranchesMonthAndDay(year));
+		$('.today-lunar-date').html(window.Tools.getLunarDate(year, month, day));
+		if(window.Tools.getSolarTerms(year, month, day)){
+			$('.today-lunar-date').append(' ' + window.Tools.getSolarTerms(year, month, day));
+		}
+		$('.today-lunar-year').html(window.Tools.heavenlyStemsAndEarthlyBranchesYear(year));
+		var calcMonth = window.Tools.heavenlyStemsAndEarthlyBranchesMonth(year, month, day);
+		var calcDay = window.Tools.heavenlyStemsAndEarthlyBranchesDay(year, month, day);
+		$('.today-lunar-md').html(calcMonth + ' ' + calcDay);
 	}
 	// 事件选择器
 	function eventFilter(selector, event, value, childrenSelector){

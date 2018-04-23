@@ -2,7 +2,7 @@
 .fr{float: right;}
 .clearfix:after{content: '';display: block;visibility: hidden;clear: both;}
 .clearfix{*zoom:1;}
-.calendar-wrapper{width: 700px;margin: auto;border: solid 2px #5caeff;}
+.calendar-wrapper{width: 800px;margin: auto;border: solid 2px #5caeff;}
 .calendar-left{width: 75%;}
 .calendar-right{width: 25%;height: 410px;background: #5caeff;text-align: center;color: #fff;}
 .calendar-left-header{height: 30px;padding: 10px 10px 0 10px;line-height: 30px;}
@@ -14,8 +14,8 @@
 .calendar-days .item.enabled{border-color: #fff; background: #f8f8f8;}
 .calendar-week .item.selected,.calendar-days .item.enabled.selected,.calendar-days .item.enabled:hover{border: solid 2px #fb0;}
 .calendar-days .item{font-size: 20px;color: #333;}
-.calendar-days .item .item-solar-term,.calendar-days .item .item-lunar-date{font-size: 12px;line-height: 12px;color: #333;}
-.calendar-days .item .item-lunar-date{color: #999;}
+.calendar-days .item .item-solar-term,.calendar-days .item .item-lunar-date,.calendar-days .item .item-festival{font-size: 12px;line-height: 12px;color: #333;}
+.calendar-days .item .item-lunar-date,.calendar-days .item .item-festival{color: #999;}
 .calendar-right-date{margin-top: 10px;}
 .calendar-right-day{display: inline-block;width: 80px;height: 80px;margin-top: 15px;line-height: 80px;border-radius: 6px;background: #fb0;font-size: 48px;}
 .calendar-right-lunar{margin-top: 10px;}
